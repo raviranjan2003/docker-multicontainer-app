@@ -1,0 +1,15 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ravi/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true ravi/react-test npm test
+
+after_success:
+  - docker build -t ravi/multi-client ./client
+  - docker build -t ravi/multi-nginx ./nginx
+  - docker build -t ravi/multi-server ./server
+  - docker build -t ravi/multi-worker ./worker
